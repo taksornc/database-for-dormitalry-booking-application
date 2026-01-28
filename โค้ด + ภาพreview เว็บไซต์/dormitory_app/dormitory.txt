@@ -1,0 +1,124 @@
+CREATE TABLE `admin` (
+  `AdminID` int(11) NOT NULL AUTO_INCREMENT,
+  `Username` varchar(255) NOT NULL,
+  `PasswordHash` varchar(255) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Status` enum('active','inactive') DEFAULT 'active',
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`AdminID`),
+  UNIQUE KEY `Username` (`Username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `adminstaff` (
+  `StaffID` int(11) NOT NULL AUTO_INCREMENT,
+  `FirstName` varchar(255) DEFAULT NULL,
+  `LastName` varchar(255) DEFAULT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Role` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`StaffID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `booking` (
+  `BookingID` int(11) NOT NULL AUTO_INCREMENT,
+  `TenantID` int(11) DEFAULT NULL,
+  `RoomID` int(11) DEFAULT NULL,
+  `BookingDate` date DEFAULT NULL,
+  `CheckInDate` date DEFAULT NULL,
+  `CheckOutDate` date DEFAULT NULL,
+  `DepositPaid` decimal(10,2) DEFAULT NULL,
+  `TotalAmount` decimal(10,2) DEFAULT NULL,
+  `PaymentStatus` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`BookingID`),
+  KEY `TenantID` (`TenantID`),
+  KEY `RoomID` (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `contactmessages` (
+  `MessageID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Message` text DEFAULT NULL,
+  `MessageDate` date DEFAULT NULL,
+  `Status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`MessageID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `maintenancerequest` (
+  `RequestID` int(11) NOT NULL AUTO_INCREMENT,
+  `TenantID` int(11) DEFAULT NULL,
+  `RoomID` int(11) DEFAULT NULL,
+  `RequestDate` date DEFAULT NULL,
+  `IssueDescription` text DEFAULT NULL,
+  `Status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`RequestID`),
+  KEY `TenantID` (`TenantID`),
+  KEY `RoomID` (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `payment` (
+  `PaymentID` int(11) NOT NULL AUTO_INCREMENT,
+  `TenantID` int(11) DEFAULT NULL,
+  `BookingID` int(11) DEFAULT NULL,
+  `AmountPaid` decimal(10,2) DEFAULT NULL,
+  `PaymentDate` date DEFAULT NULL,
+  `PaymentMethod` varchar(50) DEFAULT NULL,
+  `Receipt` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`PaymentID`),
+  KEY `TenantID` (`TenantID`),
+  KEY `BookingID` (`BookingID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `room` (
+  `RoomID` int(11) NOT NULL AUTO_INCREMENT,
+  `RoomType` varchar(50) DEFAULT NULL,
+  `MonthlyRent` decimal(10,2) DEFAULT NULL,
+  `RoomStatus` varchar(50) DEFAULT NULL,
+  `Floor` int(11) DEFAULT NULL,
+  `Size` decimal(5,2) DEFAULT NULL,
+  `Facilities` text DEFAULT NULL,
+  `RoomImage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tenant` (
+  `TenantID` int(11) NOT NULL AUTO_INCREMENT,
+  `FirstName` varchar(255) DEFAULT NULL,
+  `LastName` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `IDCardNumber` varchar(20) DEFAULT NULL,
+  `Address` varchar(255) DEFAULT NULL,
+  `CheckInDate` date DEFAULT NULL,
+  `CheckOutDate` date DEFAULT NULL,
+  PRIMARY KEY (`TenantID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `users` (
+  `UserID` int(11) NOT NULL AUTO_INCREMENT,
+  `Username` varchar(255) NOT NULL,
+  `PasswordHash` varchar(255) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Role` enum('tenant','admin') NOT NULL,
+  `Status` enum('active','inactive') DEFAULT 'active',
+  `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UpdatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`UserID`),
+  UNIQUE KEY `Username` (`Username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `utilityusage` (
+  `UtilityID` int(11) NOT NULL AUTO_INCREMENT,
+  `RoomID` int(11) DEFAULT NULL,
+  `MonthYear` varchar(7) DEFAULT NULL,
+  `WaterUsage` decimal(10,2) DEFAULT NULL,
+  `ElectricityUsage` decimal(10,2) DEFAULT NULL,
+  `WaterBill` decimal(10,2) DEFAULT NULL,
+  `ElectricityBill` decimal(10,2) DEFAULT NULL,
+  `TotalUtilityCost` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`UtilityID`),
+  KEY `RoomID` (`RoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

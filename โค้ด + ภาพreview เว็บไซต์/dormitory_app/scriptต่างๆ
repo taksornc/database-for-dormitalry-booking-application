@@ -1,0 +1,105 @@
+
+ALTER TABLE booking MODIFY BookingID VARCHAR(10) NOT NULL;
+DROP TRIGGER IF EXISTS before_insert_booking;
+DELIMITER 
+
+CREATE TRIGGER before_insert_booking
+BEFORE INSERT ON booking
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+        SELECT COALESCE(MAX(CAST(SUBSTRING(BookingID, 2) AS UNSIGNED)), 0) + 1 
+    INTO next_id FROM booking;
+    SET NEW.BookingID = CONCAT('B', LPAD(next_id, 3, '0'));
+END;
+
+ALTER TABLE lease_agreement MODIFY LeaseID VARCHAR(10) NOT NULL;
+ALTER TABLE maintenancerequest MODIFY RequestID VARCHAR(10) NOT NULL;
+ALTER TABLE payment MODIFY PaymentID VARCHAR(10) NOT NULL;
+ALTER TABLE room MODIFY RoomID VARCHAR(10) NOT NULL;
+ALTER TABLE tenant MODIFY TenantID VARCHAR(10) NOT NULL;
+ALTER TABLE users MODIFY UserID VARCHAR(10) NOT NULL;
+ALTER TABLE utilityusage MODIFY UtilityID VARCHAR(10) NOT NULL;
+
+DROP TRIGGER IF EXISTS before_insert_lease;
+DROP TRIGGER IF EXISTS before_insert_maintenance;
+DROP TRIGGER IF EXISTS before_insert_payment;
+DROP TRIGGER IF EXISTS before_insert_room;
+DROP TRIGGER IF EXISTS before_insert_tenant;
+DROP TRIGGER IF EXISTS before_insert_utility;
+
+DELIMITER //
+
+CREATE TRIGGER before_insert_lease
+BEFORE INSERT ON lease_agreement
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(LeaseID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM lease_agreement;
+    SET NEW.LeaseID = CONCAT('L', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_maintenance
+BEFORE INSERT ON maintenancerequest
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(RequestID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM maintenancerequest;
+    SET NEW.RequestID = CONCAT('M', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_payment
+BEFORE INSERT ON payment
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(PaymentID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM payment;
+    SET NEW.PaymentID = CONCAT('P', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_room
+BEFORE INSERT ON room
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(RoomID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM room;
+    SET NEW.RoomID = CONCAT('R', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_tenant
+BEFORE INSERT ON tenant
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(TenantID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM tenant;
+    SET NEW.TenantID = CONCAT('T', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_user
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM users;
+    SET NEW.UserID = CONCAT('U', LPAD(next_id, 3, '0'));
+END;
+//
+
+CREATE TRIGGER before_insert_utility
+BEFORE INSERT ON utilityusage
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+    SELECT COALESCE(MAX(CAST(SUBSTRING(UtilityID, 2) AS UNSIGNED)), 0) + 1 INTO next_id FROM utilityusage;
+    SET NEW.UtilityID = CONCAT('UT', LPAD(next_id, 3, '0'));
+END;
+//
+
+DELIMITER ;
+
+
